@@ -1,0 +1,8 @@
+dki mongodb
+cd server -> npm i -g nodemon
+npm i express body-parser bcrypt cors dotenv gridfs-stream multer multer-gridfs-storage-engine morgan jsonwebtoken mongoose
+
+cd client -> npm i react-redux @reduxjs/toolkit redux-persist react-dropzone dotenv formik yup react-router-dom@6 @mui/material @emotion/react @emotion/styled @mui/icons-material
+
+cd server to run server-> nodemon index.js ( lan dau thi phai commentout user de get database, cac lan sau comment lai)
+cd client -> npm run start
