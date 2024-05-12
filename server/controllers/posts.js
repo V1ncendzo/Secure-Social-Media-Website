@@ -71,7 +71,7 @@ export const likePost = async (req, res) => {
   }
 };
 
-/* DELETE */
+/* DELETE */ //own posts
 export const deletePost = async (req, res) => {
   try {
     const { id } = req.params;
@@ -102,3 +102,21 @@ export const deletePost = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+// DELETE all posts
+// export const deletePost = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     // Find the post by its ID and delete it
+//     const deletedPost = await Post.findByIdAndDelete(id);
+//     // If the post doesn't exist, return a 404 status
+//     if (!deletedPost) {
+//       return res.status(404).json({ message: "Post not found" });
+//     }
+//     // If the post is successfully deleted, return a success message
+//     res.status(200).json({ message: "Post deleted successfully" });
+//   } catch (err) {
+//     // If there's an error during the deletion process, return a 500 status with an error message
+//     res.status(500).json({ message: err.message });
+//   }
+// };
