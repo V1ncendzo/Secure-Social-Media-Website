@@ -79,14 +79,21 @@ const Form = () => {
   };
 
   const login = async (values, onSubmitProps) => {
-    const loggedInResponse = await fetch("http://localhost:3001/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(values),
-    });
-    const loggedIn = await loggedInResponse.json();
-    onSubmitProps.resetForm();
-    if (loggedIn) {
+    try {
+      const loggedInResponse = await fetch("http://localhost:3001/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+
+      if (!loggedInResponse.ok) {
+        // Handle non-successful HTTP response (e.g., authentication failure)
+        throw new Error("Email or password is incorrect. Please try again!");
+      }
+
+      const loggedIn = await loggedInResponse.json();
+      onSubmitProps.resetForm();
+
       dispatch(
         setLogin({
           user: loggedIn.user,
@@ -94,6 +101,9 @@ const Form = () => {
         })
       );
       navigate("/home");
+    } catch (err) {
+      // Display alert message for login failure
+      window.alert(err.message);
     }
   };
 
