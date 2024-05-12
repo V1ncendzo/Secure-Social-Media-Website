@@ -70,7 +70,7 @@ export const likePost = async (req, res) => {
     res.status(404).json({ message: err.message });
   }
 };
-/* DELETE */
+/* DELETE */ //deletePost
 export const deletePost = async (req, res) => {
   try {
     const { id } = req.params;
