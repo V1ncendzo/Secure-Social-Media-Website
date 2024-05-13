@@ -17,17 +17,13 @@ import Dropzone from "react-dropzone";
 import FlexBetween from "components/FlexBetween";
 
 const registerSchema = yup.object().shape({
-  firstName: yup.string().required("required").max(50, "First Name must be at most 50 characters long"),
-  lastName: yup.string().required("required").max(50, "Last Name must be at most 50 characters long"),
-  email: yup.string().email("invalid email").required("required").max(255, "Email must be at most 255 characters long"),
-  password: yup.string()
-    .min(12, "Password must be at least 12 characters long")
-    .max(128, "Password must not exceed 128 characters")
-    // .matches(/^[\u0020-\uD7FF\uE000-\uFFFD]*$/, "Password contains invalid characters") // Allow printable Unicode characters including spaces and emojis
-    .required("required"),
-  location: yup.string().required("required").max(100, "Location must be at most 100 characters long"),
-  occupation: yup.string().required("required").max(100, "Occupation must be at most 100 characters long"),
-  picture: yup.string(),
+  firstName: yup.string().required("required"),
+  lastName: yup.string().required("required"),
+  email: yup.string().email("invalid email").required("required"),
+  password: yup.string().required("required"),
+  location: yup.string().required("required"),
+  occupation: yup.string().required("required"),
+  picture: yup.string().required("required"),
 });
 
 const loginSchema = yup.object().shape({
@@ -52,6 +48,7 @@ const initialValuesLogin = {
 
 const Form = () => {
   const [pageType, setPageType] = useState("login");
+  const [loginError, setLoginError] = useState(""); //red line alert
   const { palette } = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -79,18 +76,27 @@ const Form = () => {
 
     if (savedUser) {
       setPageType("login");
+      alert("Registration successful!"); // Alert when registration is successful
     }
   };
 
   const login = async (values, onSubmitProps) => {
-    const loggedInResponse = await fetch("http://localhost:3001/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(values),
-    });
-    const loggedIn = await loggedInResponse.json();
-    onSubmitProps.resetForm();
-    if (loggedIn) {
+    try {
+      const loggedInResponse = await fetch("http://localhost:3001/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+
+      if (!loggedInResponse.ok) {
+        // Set login error message if authentication fails
+        setLoginError("Email or password is incorrect. Please try again!");
+        return; // Exit the function early
+      }
+
+      const loggedIn = await loggedInResponse.json();
+      onSubmitProps.resetForm();
+
       dispatch(
         setLogin({
           user: loggedIn.user,
@@ -98,10 +104,14 @@ const Form = () => {
         })
       );
       navigate("/home");
+    } catch (err) {
+      // Display alert message for login failure
+      window.alert(err.message);
     }
   };
 
   const handleFormSubmit = async (values, onSubmitProps) => {
+    setLoginError("");
     if (isLogin) await login(values, onSubmitProps);
     if (isRegister) await register(values, onSubmitProps);
   };
@@ -123,6 +133,13 @@ const Form = () => {
         resetForm,
       }) => (
         <form onSubmit={handleSubmit}>
+          {/* Display login error message */}
+          {loginError && (
+            <Typography sx={{ color: "red", marginBottom: "2rem" }}>
+              {loginError}
+            </Typography>
+          )}
+
           <Box
             display="grid"
             gap="30px"
