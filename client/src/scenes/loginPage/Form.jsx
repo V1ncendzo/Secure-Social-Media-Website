@@ -17,13 +17,17 @@ import Dropzone from "react-dropzone";
 import FlexBetween from "components/FlexBetween";
 
 const registerSchema = yup.object().shape({
-  firstName: yup.string().required("required"),
-  lastName: yup.string().required("required"),
-  email: yup.string().email("invalid email").required("required"),
-  password: yup.string().required("required"),
-  location: yup.string().required("required"),
-  occupation: yup.string().required("required"),
-  picture: yup.string().required("required"),
+  firstName: yup.string().required("required").max(50, "First Name must be at most 50 characters long"),
+  lastName: yup.string().required("required").max(50, "Last Name must be at most 50 characters long"),
+  email: yup.string().email("invalid email").required("required").max(255, "Email must be at most 255 characters long"),
+  password: yup.string()
+    .min(12, "Password must be at least 12 characters long")
+    .max(128, "Password must not exceed 128 characters")
+    // .matches(/^[\u0020-\uD7FF\uE000-\uFFFD]*$/, "Password contains invalid characters") // Allow printable Unicode characters including spaces and emojis
+    .required("required"),
+  location: yup.string().required("required").max(100, "Location must be at most 100 characters long"),
+  occupation: yup.string().required("required").max(100, "Occupation must be at most 100 characters long"),
+  picture: yup.string(),
 });
 
 const loginSchema = yup.object().shape({
