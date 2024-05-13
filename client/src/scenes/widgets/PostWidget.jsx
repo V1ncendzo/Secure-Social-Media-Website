@@ -34,6 +34,8 @@ const PostWidget = ({
   const main = palette.neutral.main;
   const primary = palette.primary.main;
 
+  const isCurrentUserPost = postUserId === loggedInUserId; // Check if it's the user's post
+
   const patchLike = async () => {
     const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
       method: "PATCH",
@@ -54,6 +56,7 @@ const PostWidget = ({
         name={name}
         subtitle={location}
         userPicturePath={userPicturePath}
+        isCurrentUserPost={isCurrentUserPost}
       />
       <Typography color={main} sx={{ mt: "1rem" }}>
         {description}
