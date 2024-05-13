@@ -48,6 +48,7 @@ const initialValuesLogin = {
 
 const Form = () => {
   const [pageType, setPageType] = useState("login");
+  const [loginError, setLoginError] = useState(""); //red line alert
   const { palette } = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -75,6 +76,7 @@ const Form = () => {
 
     if (savedUser) {
       setPageType("login");
+      alert("Registration successful!"); // Alert when registration is successful
     }
   };
 
@@ -87,8 +89,9 @@ const Form = () => {
       });
 
       if (!loggedInResponse.ok) {
-        // Handle non-successful HTTP response (e.g., authentication failure)
-        throw new Error("Email or password is incorrect. Please try again!");
+        // Set login error message if authentication fails
+        setLoginError("Email or password is incorrect. Please try again!");
+        return; // Exit the function early
       }
 
       const loggedIn = await loggedInResponse.json();
@@ -108,6 +111,7 @@ const Form = () => {
   };
 
   const handleFormSubmit = async (values, onSubmitProps) => {
+    setLoginError("");
     if (isLogin) await login(values, onSubmitProps);
     if (isRegister) await register(values, onSubmitProps);
   };
@@ -129,6 +133,13 @@ const Form = () => {
         resetForm,
       }) => (
         <form onSubmit={handleSubmit}>
+          {/* Display login error message */}
+          {loginError && (
+            <Typography sx={{ color: "red", marginBottom: "2rem" }}>
+              {loginError}
+            </Typography>
+          )}
+
           <Box
             display="grid"
             gap="30px"
