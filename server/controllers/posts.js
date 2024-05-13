@@ -75,8 +75,7 @@ export const likePost = async (req, res) => {
 export const deletePost = async (req, res) => {
   try {
     const { id } = req.params;
-    const userIdFromRequest = req.user.userId; // Assuming you have the user ID available in the request object
-
+    const userIdFromRequest = req.user.id; // Assuming you have the user ID available in the request object
     // Find the post by its ID
     const post = await Post.findById(id);
 

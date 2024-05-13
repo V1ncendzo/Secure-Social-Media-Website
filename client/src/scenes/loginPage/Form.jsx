@@ -109,10 +109,6 @@ const Form = () => {
 
   const handleFormSubmit = async (values, onSubmitProps) => {
     if (isLogin) await login(values, onSubmitProps);
-    else {
-      // Display alert message for wrong password
-      window.alert("Invalid credentials. Please try again.");
-    }
     if (isRegister) await register(values, onSubmitProps);
   };
 
