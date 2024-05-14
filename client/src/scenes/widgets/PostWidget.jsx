@@ -3,6 +3,7 @@ import {
   FavoriteBorderOutlined,
   FavoriteOutlined,
   ShareOutlined,
+  DeleteOutlined,
 } from "@mui/icons-material";
 import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
@@ -49,6 +50,32 @@ const PostWidget = ({
     dispatch(setPost({ post: updatedPost }));
   };
 
+  const deletePost = async (postId) => {
+    // Confirmation logic
+    const confirmation = window.confirm("Are you sure you want to delete this post?");
+
+    if (confirmation) {
+      try {
+        const response = await fetch(`http://localhost:3001/posts/${postId}/delete`, {
+          method: "DELETE",
+          headers: {
+            "Authorization": `Bearer ${token}`, // Include your auth token in headers
+          },
+        });
+    
+        if (!response.ok) {
+          throw new Error("Failed to delete post");
+        }
+    
+        console.log("Post deleted successfully!");
+        // Update UI to reflect the deleted post (discussed later)
+      } catch (error) {
+        console.error("Error deleting post:", error);
+        // Handle errors gracefully (e.g., display an error message to the user)
+      }
+    }
+
+  };
   return (
     <WidgetWrapper m="2rem 0">
       <Friend
@@ -91,9 +118,20 @@ const PostWidget = ({
           </FlexBetween>
         </FlexBetween>
 
-        <IconButton>
-          <ShareOutlined />
-        </IconButton>
+        <FlexBetween mt="0.25rem">
+          <IconButton>
+            <ShareOutlined />
+          </IconButton>
+          {isCurrentUserPost && (
+              <IconButton
+                onClick={() => deletePost(postId)}
+                sx={{ color: "error.main"}}
+              >
+                <DeleteOutlined />
+              </IconButton>
+          )}
+        </FlexBetween>
+
       </FlexBetween>
       {isComments && (
         <Box mt="0.5rem">
