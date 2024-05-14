@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
-  service: process.env.SERVICE,
+  service: process.env.service,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
@@ -25,6 +25,7 @@ export const forgotPassword = async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
+
     User.passwordResetToken = token;
     User.passwordResetExpires = Date.now() + 3600000; // 1 hour
     await user.save();
@@ -55,8 +56,6 @@ export const resetPassword = async (req, res) => {
 
     const user = await User.findOne({
       _id: decodedToken.id,
-      passwordResetToken: token,
-      passwordResetExpires: { $gt: Date.now() },
     });
 
     if (!user) {
