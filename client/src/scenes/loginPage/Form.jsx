@@ -57,26 +57,38 @@ const Form = () => {
   const isRegister = pageType === "register";
 
   const register = async (values, onSubmitProps) => {
-    // this allows us to send form info with image
-    const formData = new FormData();
-    for (let value in values) {
-      formData.append(value, values[value]);
-    }
-    formData.append("picturePath", values.picture.name);
-
-    const savedUserResponse = await fetch(
-      "http://localhost:3001/auth/register",
-      {
-        method: "POST",
-        body: formData,
+    try {
+      // this allows us to send form info with image
+      const formData = new FormData();
+      for (let value in values) {
+        formData.append(value, values[value]);
       }
-    );
-    const savedUser = await savedUserResponse.json();
-    onSubmitProps.resetForm();
+      formData.append("picturePath", values.picture.name);
 
-    if (savedUser) {
-      setPageType("login");
-      alert("Registration successful!"); // Alert when registration is successful
+      const savedUserResponse = await fetch(
+        "http://localhost:3001/auth/register",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const savedUser = await savedUserResponse.json();
+
+      if (savedUserResponse.ok) {
+        // If the response status is ok, it means registration was successful
+        onSubmitProps.resetForm();
+        setPageType("login");
+        alert("Registration successful!"); // Alert when registration is successful
+      } else {
+        // If there's an error in the response, it means registration failed
+        throw new Error(savedUser.error || "Registration failed");
+      }
+    } catch (err) {
+      // Display alert with the error message
+      alert(err.message);
+      // Reset the form in case of error
+      onSubmitProps.resetForm();
     }
   };
 

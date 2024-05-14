@@ -16,6 +16,14 @@ export const register = async (req, res) => {
       occupation,
     } = req.body;
 
+    // Check if the email already exists in the database
+    const existingUser = await User.findOne({ email: email });
+    if (existingUser) {
+      return res
+        .status(400)
+        .json({ error: "Email already exists. Please use a different email." });
+    }
+
     const salt = await bcrypt.genSalt();
     const passwordHash = await bcrypt.hash(password, salt);
 
