@@ -45,10 +45,6 @@ const UserSchema = new mongoose.Schema(
     occupation: String,
     viewdProfile: Number,
     impressions: Number,
-    otp: String,
-    otpExpiry: Date,
-    resetToken: String,
-    resetTokenExpiry: Date,
   },
   { timestamps: true }
 );
