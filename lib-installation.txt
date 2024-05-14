@@ -1,6 +1,7 @@
 dki mongodb
 cd server -> npm i -g nodemon
 npm i express body-parser bcrypt cors dotenv gridfs-stream multer multer-gridfs-storage-engine morgan jsonwebtoken mongoose
+npm install nodemailer
 
 cd client -> npm i react-redux @reduxjs/toolkit redux-persist react-dropzone dotenv formik yup react-router-dom@6 @mui/material @emotion/react @emotion/styled @mui/icons-material
 
