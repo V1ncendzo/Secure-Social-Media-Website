@@ -45,7 +45,9 @@ export const login = async (req, res) => {
     const user = await User.findOne({ email: email }); //Find 1 in the Database
     if (!user) return res.status(400).json({ msg: "Invalid credentials. " }); //Edit message
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.password); //user.pw : hashed pw stored in the db
+    /*bcrypt.compare internally hashes the unhashed password using the same salt that was used to hash the 
+    original password and then compares the resulting hash with the stored hash. */
     if (!isMatch) return res.status(400).json({ msg: "Invalid credentials. " });
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
