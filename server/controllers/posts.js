@@ -100,10 +100,48 @@ export const deletePost = async (req, res) => {
     const deletedPost = await Post.findByIdAndDelete(id);
 
     // Return a success message
-    res.status(200).json({ success: true, message: "Post deleted successfully" });
+    res
+      .status(200)
+      .json({ success: true, message: "Post deleted successfully" });
   } catch (err) {
     // If there's an error during the deletion process, return a 500 status with an error message
     res.status(500).json({ message: err.message });
   }
 };
 
+/* ADD COMMENT */
+export const addCommentToPost = async (req, res) => {
+  try {
+    const { postId, comment } = req.body;
+
+    // Find the post by its ID
+    const post = await Post.findById(postId);
+
+    // Check if the post exists
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    // Find the user by ID to get the user's name
+    const user = await User.findById(req.user.id);
+
+    // Add the comment to the post with the user's name
+    post.comments.push({
+      userId: req.user.id,
+      userName: user.firstName + " " + user.lastName, // Assuming you have firstName and lastName fields
+      content: comment,
+    });
+    await post.save();
+
+    // Manually populate userName in the comments array
+    for (const comment of post.comments) {
+      const commenter = await User.findById(comment.userId);
+      comment.userName = commenter.firstName + " " + commenter.lastName;
+    }
+
+    // Return the updated post with userName populated in the comments
+    res.status(200).json(post);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
