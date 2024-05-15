@@ -3,11 +3,12 @@ import {
   FavoriteBorderOutlined,
   FavoriteOutlined,
   ShareOutlined,
-  DeleteOutlined,
+
 } from "@mui/icons-material";
 import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import Friend from "components/Friend";
+import DeletePost from "components/deletePost";
 import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -49,33 +50,7 @@ const PostWidget = ({
     const updatedPost = await response.json();
     dispatch(setPost({ post: updatedPost }));
   };
-
-  const deletePost = async (postId) => {
-    // Confirmation logic
-    const confirmation = window.confirm("Are you sure you want to delete this post?");
-
-    if (confirmation) {
-      try {
-        const response = await fetch(`http://localhost:3001/posts/${postId}/delete`, {
-          method: "DELETE",
-          headers: {
-            "Authorization": `Bearer ${token}`, // Include your auth token in headers
-          },
-        });
-    
-        if (!response.ok) {
-          throw new Error("Failed to delete post");
-        }
-    
-        console.log("Post deleted successfully!");
-        // Update UI to reflect the deleted post (discussed later)
-      } catch (error) {
-        console.error("Error deleting post:", error);
-        // Handle errors gracefully (e.g., display an error message to the user)
-      }
-    }
-
-  };
+  
   return (
     <WidgetWrapper m="2rem 0">
       <Friend
@@ -123,12 +98,7 @@ const PostWidget = ({
             <ShareOutlined />
           </IconButton>
           {isCurrentUserPost && (
-              <IconButton
-                onClick={() => deletePost(postId)}
-                sx={{ color: "error.main"}}
-              >
-                <DeleteOutlined />
-              </IconButton>
+            <DeletePost postId={postId} />
           )}
         </FlexBetween>
 
