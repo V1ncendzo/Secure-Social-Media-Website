@@ -27,6 +27,7 @@ const postSchema = mongoose.Schema(
       {
         userId: { type: Schema.Types.ObjectId, ref: "User" },
         userName: String,
+        userPicturePath: String, // Added field for user's profile picture
         content: String,
         createdAt: { type: Date, default: Date.now },
       },
