@@ -123,6 +123,7 @@ import {
   ChatBubbleOutlineOutlined,
   FavoriteBorderOutlined,
   FavoriteOutlined,
+  PodcastsSharp,
   ShareOutlined,
 } from "@mui/icons-material";
 import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
@@ -145,6 +146,7 @@ const PostWidget = ({
   userPicturePath,
   likes,
   comments,
+  createdAt,
 }) => {
   const [isComments, setIsComments] = useState(false);
   const dispatch = useDispatch();
@@ -181,6 +183,19 @@ const PostWidget = ({
         userPicturePath={userPicturePath}
         isCurrentUserPost={isCurrentUserPost}
       />
+      <Typography
+        variant="caption"
+        sx={{ color: "#00d5fa", fontStyle: "italic" }}
+      >
+        {new Date(createdAt).toLocaleString("en-US", {
+          weekday: "short",
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        })}
+      </Typography>
       <Typography color={main} sx={{ mt: "1rem" }}>
         {description}
       </Typography>

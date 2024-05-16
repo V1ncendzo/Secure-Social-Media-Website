@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Box, Button, Divider, TextField, Typography } from "@mui/material";
+import { Box, Button, Divider, TextField, Typography } from "@mui/material"; // Import Avatar component
+import { Avatar } from "@mui/material"; // Import Avatar component
 import { useDispatch, useSelector } from "react-redux";
 import { setPost } from "state";
 
@@ -31,10 +32,15 @@ const CommentSection = ({ postId, comments }) => {
       {comments.map((comment, i) => (
         <Box key={`${comment.userId}-${i}`} mb="0.5rem">
           <Divider />
-          <Typography sx={{ color: "textPrimary" }}>
-            <span style={{ fontWeight: "bold" }}>{comment.userName}</span> :{" "}
-            {comment.content}
-          </Typography>
+          <Box display="flex" alignItems="center">
+            <Avatar
+              src={`http://localhost:3001/assets/${comment.userPicturePath}`}
+            />
+            <Typography sx={{ color: "textPrimary", ml: "0.5rem" }}>
+              <span style={{ fontWeight: "bold" }}>{comment.userName}</span> :{" "}
+              {comment.content}
+            </Typography>
+          </Box>
           <Typography
             variant="caption"
             sx={{ color: "#00d5fa", fontStyle: "italic" }}

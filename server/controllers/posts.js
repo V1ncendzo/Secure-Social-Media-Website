@@ -129,6 +129,7 @@ export const addCommentToPost = async (req, res) => {
     post.comments.push({
       userId: req.user.id,
       userName: user.firstName + " " + user.lastName, // Assuming you have firstName and lastName fields
+      userPicturePath: user.picturePath,
       content: comment,
     });
     await post.save();
