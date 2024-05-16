@@ -22,6 +22,7 @@ const postSchema = mongoose.Schema(
       type: Map,
       of: Boolean,
     },
+    createdAt: { type: Date, default: Date.now },
     comments: [
       {
         userId: { type: Schema.Types.ObjectId, ref: "User" },
