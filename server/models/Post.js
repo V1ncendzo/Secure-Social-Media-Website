@@ -22,10 +22,12 @@ const postSchema = mongoose.Schema(
       type: Map,
       of: Boolean,
     },
+    createdAt: { type: Date, default: Date.now },
     comments: [
       {
         userId: { type: Schema.Types.ObjectId, ref: "User" },
         userName: String,
+        userPicturePath: String, // Added field for user's profile picture
         content: String,
         createdAt: { type: Date, default: Date.now },
       },
