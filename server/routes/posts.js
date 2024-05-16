@@ -21,5 +21,5 @@ router.patch("/:id/like", verifyToken, likePost);
 router.delete("/:id/delete", verifyToken, deletePost);
 
 /* ADD COMMENT */
-router.post("/:id/comment", verifyToken, addCommentToPost); // Add the new route for adding comments
+router.post("/comment", verifyToken, addCommentToPost); // Add the new route for adding comments
 export default router;
