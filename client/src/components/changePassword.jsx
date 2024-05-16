@@ -3,6 +3,7 @@ import { Box, Button, TextField, Dialog, DialogTitle, DialogContent, DialogActio
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const changePasswordSchema = yup.object().shape({
   oldPassword: yup.string().required("Old password is required"),
@@ -18,7 +19,8 @@ const changePasswordSchema = yup.object().shape({
 
 const ChangePassword = ({ open, handleClose }) => {
   const token = useSelector((state) => state.token);
-
+  const navigate = useNavigate();
+  
   const handleChangePassword = async (values, onSubmitProps) => {
     try {
       const body = new URLSearchParams({
@@ -37,7 +39,8 @@ const ChangePassword = ({ open, handleClose }) => {
 
       if (response.ok) {
         onSubmitProps.resetForm();
-        alert("Password changed successfully!"); // Display success message
+        alert("Password changed successfully!");
+        navigate("/");
       } else {
         const data = await response.json();
         throw new Error(data.message || "Failed to change password");
