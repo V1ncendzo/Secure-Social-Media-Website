@@ -73,12 +73,16 @@ export const addRemoveFriend = async (req, res) => {
     // Check if the user is trying to add themselves as a friend
     if (id === friendId) {
       // Redirect to home page
-      return res.redirect("/");
+      return res.redirect("/home");
     }
 
     const user = await User.findById(id);
     const friend = await User.findById(friendId);
 
+    if (!user || !friend) {
+      return res.status(404).json({ message: "User or friend not found." });
+    }
+    
     if (!Array.isArray(user.friends) || !Array.isArray(friend.friends)) {
       return res.status(500).json({ message: "Invalid friends data." });
     }
@@ -113,6 +117,10 @@ export const changePassword = async (req, res) => {
   try {
     const { oldPassword, newPassword } = req.body;
     const userId = req.user.id;
+    
+    if (!oldPassword || !newPassword) {
+      return res.status(400).json({ msg: "Please enter both old and new passwords." });
+    }
 
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ msg: "User not found." });
@@ -121,9 +129,16 @@ export const changePassword = async (req, res) => {
     if (!isMatch)
       return res.status(400).json({ msg: "Invalid current password." });
 
+    // if (newPassword.length < 8) { // Example minimum length check
+    //   return res.status(400).json({ msg: "Password must be at least 8 characters long." });
+    // }
+
     const salt = await bcrypt.genSalt();
     const newPasswordHash = await bcrypt.hash(newPassword, salt);
-
+    if (!newPasswordHash) {
+      return res.status(500).json({ msg: "Error hashing new password." }); // Handle hashing error
+    }
+    
     user.password = newPasswordHash;
     await user.save();
 
