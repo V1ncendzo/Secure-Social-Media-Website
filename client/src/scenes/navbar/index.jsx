@@ -59,7 +59,7 @@ const Navbar = () => {
             },
           }}
         >
-          PhêBook
+          The Citizen
         </Typography>
         {isNonMobileScreens && (
           <FlexBetween
