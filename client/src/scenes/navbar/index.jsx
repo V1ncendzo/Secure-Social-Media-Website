@@ -24,6 +24,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "state";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
+import ChangePassword from "components/changePassword";
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -40,6 +41,8 @@ const Navbar = () => {
   const alt = theme.palette.background.alt;
 
   const fullName = `${user.firstName} ${user.lastName}`;
+
+  const [showChangePassword, setShowChangePassword] = useState(false);
 
   return (
     <FlexBetween padding="1rem 6%" backgroundColor={alt}>
@@ -107,6 +110,7 @@ const Navbar = () => {
               <MenuItem value={fullName}>
                 <Typography>{fullName}</Typography>
               </MenuItem>
+              <MenuItem onClick={() => setShowChangePassword(true)}>Change Password</MenuItem>
               <MenuItem onClick={() => dispatch(setLogout())}>Log Out</MenuItem>
             </Select>
           </FormControl>
@@ -182,6 +186,7 @@ const Navbar = () => {
                 <MenuItem value={fullName}>
                   <Typography>{fullName}</Typography>
                 </MenuItem>
+                <MenuItem onClick={() => setShowChangePassword(true)}>Change Password</MenuItem>
                 <MenuItem onClick={() => dispatch(setLogout())}>
                   Log Out
                 </MenuItem>
@@ -189,6 +194,9 @@ const Navbar = () => {
             </FormControl>
           </FlexBetween>
         </Box>
+      )}
+      {showChangePassword && (
+          <ChangePassword open={showChangePassword} handleClose={() => setShowChangePassword(false)}/>
       )}
     </FlexBetween>
   );
