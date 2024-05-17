@@ -39,14 +39,14 @@ const ChangePassword = ({ open, handleClose }) => {
 
       if (response.ok) {
         onSubmitProps.resetForm();
-        alert("Password changed successfully!");
+        // alert("Password changed successfully!");
         navigate("/");
       } else {
         const data = await response.json();
         throw new Error(data.message || "Failed to change password");
       }
-    } catch (error) {
-      alert(error.message); // Display error message
+    } catch (err) {
+      window.alert(err.message);
     }
   };
 

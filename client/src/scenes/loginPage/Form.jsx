@@ -14,7 +14,8 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLogin } from "state";
 import Dropzone from "react-dropzone";
-import FlexBetween from "components/FlexBetween";
+// import FlexBetween from "components/FlexBetween";
+import ForgotPassword from 'components/forgotPassword'; 
 
 const registerSchema = yup.object().shape({
   firstName: yup.string().required("required"),
@@ -55,6 +56,8 @@ const Form = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
+
+  const [showForgotPaswsord, setShowForgotPassword] = useState(false);
 
   const register = async (values, onSubmitProps) => {
     try {
@@ -128,7 +131,9 @@ const Form = () => {
     if (isRegister) await register(values, onSubmitProps);
   };
 
-  return (
+
+return (
+  <>
     <Formik
       onSubmit={handleFormSubmit}
       initialValues={isLogin ? initialValuesLogin : initialValuesRegister}
@@ -145,7 +150,6 @@ const Form = () => {
         resetForm,
       }) => (
         <form onSubmit={handleSubmit}>
-          {/* Display login error message */}
           {loginError && (
             <Typography sx={{ color: "red", marginBottom: "2rem" }}>
               {loginError}
@@ -168,9 +172,7 @@ const Form = () => {
                   onChange={handleChange}
                   value={values.firstName}
                   name="firstName"
-                  error={
-                    Boolean(touched.firstName) && Boolean(errors.firstName)
-                  }
+                  error={Boolean(touched.firstName) && Boolean(errors.firstName)}
                   helperText={touched.firstName && errors.firstName}
                   sx={{ gridColumn: "span 2" }}
                 />
@@ -200,9 +202,7 @@ const Form = () => {
                   onChange={handleChange}
                   value={values.occupation}
                   name="occupation"
-                  error={
-                    Boolean(touched.occupation) && Boolean(errors.occupation)
-                  }
+                  error={Boolean(touched.occupation) && Boolean(errors.occupation)}
                   helperText={touched.occupation && errors.occupation}
                   sx={{ gridColumn: "span 4" }}
                 />
@@ -230,10 +230,10 @@ const Form = () => {
                         {!values.picture ? (
                           <p>Add Picture Here</p>
                         ) : (
-                          <FlexBetween>
+                          <Box display="flex" justifyContent="space-between">
                             <Typography>{values.picture.name}</Typography>
                             <EditOutlinedIcon />
-                          </FlexBetween>
+                          </Box>
                         )}
                       </Box>
                     )}
@@ -265,7 +265,6 @@ const Form = () => {
             />
           </Box>
 
-          {/* BUTTONS */}
           <Box>
             <Button
               fullWidth
@@ -280,28 +279,54 @@ const Form = () => {
             >
               {isLogin ? "LOGIN" : "REGISTER"}
             </Button>
-            <Typography
-              onClick={() => {
-                setPageType(isLogin ? "register" : "login");
-                resetForm();
-              }}
+            <Box
               sx={{
-                textDecoration: "underline",
-                color: palette.primary.main,
-                "&:hover": {
-                  cursor: "pointer",
-                  color: palette.primary.light,
-                },
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
               }}
             >
-              {isLogin
-                ? "Don't have an account? Sign Up here."
-                : "Already have an account? Login here."}
-            </Typography>
-          </Box>
-        </form>
+              <Typography
+                onClick={() => {
+                  setPageType(isLogin ? "register" : "login");
+                  resetForm();
+                }}
+                sx={{
+                  textDecoration: "underline",
+                  color: palette.primary.main,
+                  "&:hover": {
+                    cursor: "pointer",
+                    color: palette.primary.light,
+                  },
+                }}
+              >
+                {isLogin
+                  ? "Don't have an account? Sign Up here."
+                  : "Already have an account? Login here."}
+              </Typography>
+              <Typography
+                  onClick={() => setShowForgotPassword(true)}
+                  sx={{
+                    textDecoration: "underline",
+                    color: palette.primary.main,
+                    "&:hover": {
+                      cursor: "pointer",
+                      color: palette.primary.light,
+                    },
+                  }}
+                >
+                  Forgot Password?
+              </Typography>
+              </Box>
+            </Box>
+          </form>
+        )}
+      </Formik>
+
+      {showForgotPaswsord && (
+        <ForgotPassword open={showForgotPaswsord} handleClose={() => setShowForgotPassword(false)} />
       )}
-    </Formik>
+    </>
   );
 };
 

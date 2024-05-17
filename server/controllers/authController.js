@@ -16,7 +16,8 @@ const transporter = nodemailer.createTransport({
 
 export const forgotPassword = async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.body.email });
+    const { email} = req.body;
+    const user = await User.findOne({ email: email });
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
@@ -30,14 +31,14 @@ export const forgotPassword = async (req, res) => {
     User.passwordResetExpires = Date.now() + 3600000; // 1 hour
     await user.save();
 
-    const resetUrl = `http://localhost:3001/auth/reset-password?token=${token}`;
+    // const resetUrl = "http://localhost:3001/auth/reset-password?token=${token}`;
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: user.email,
       subject: "Password Reset Request",
       html: `
-        <p>You requested a password reset. Click the link below to reset your password:</p>
-        <a href="${resetUrl}">${resetUrl}</a>
+        <p>You requested a password reset. Get your recovery token to reset password.</p>
+        <p>Recovery Token: ${token}</p>
       `,
     };
 
@@ -51,7 +52,7 @@ export const forgotPassword = async (req, res) => {
 
 export const resetPassword = async (req, res) => {
   try {
-    const token = req.query.token;
+    const token = req.body.verifyToken;
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
 
     const user = await User.findOne({
@@ -65,7 +66,7 @@ export const resetPassword = async (req, res) => {
     }
 
     const salt = await bcrypt.genSalt();
-    user.password = await bcrypt.hash(req.body.password, salt);
+    user.password = await bcrypt.hash(req.body.newPassword, salt);
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
     await user.save();
