@@ -8,7 +8,7 @@ const CommentSection = ({ postId, comments }) => {
   const [newComment, setNewComment] = useState("");
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
-  const loggedInUserId = useSelector((state) => state.user._id);
+  // const loggedInUserId = useSelector((state) => state.user._id);
 
   const handleAddComment = async () => {
     const response = await fetch(`http://localhost:3001/posts/comment`, {
