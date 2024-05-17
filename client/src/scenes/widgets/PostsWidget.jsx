@@ -37,39 +37,41 @@ const PostsWidget = ({ userId, isProfile }) => {
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  return (
-    <>
-      {posts.map(
-        ({
-          _id,
-          userId,
-          firstName,
-          lastName,
-          description,
-          location,
-          picturePath,
-          userPicturePath,
-          likes,
-          comments,
-          createdAt,
-        }) => (
-          <PostWidget
-            key={_id}
-            postId={_id}
-            postUserId={userId}
-            name={`${firstName} ${lastName}`}
-            description={description}
-            location={location}
-            picturePath={picturePath}
-            userPicturePath={userPicturePath}
-            likes={likes}
-            comments={comments}
-            createdAt={createdAt}
-          />
-        )
-      )}
-    </>
-  );
+  const renderedPosts = [];
+
+  for (let i = 0; i < posts.length; i++) {
+    const {
+      _id,
+      userId,
+      firstName,
+      lastName,
+      description,
+      location,
+      picturePath,
+      userPicturePath,
+      likes,
+      comments,
+      createdAt,
+    } = posts[i];
+
+    renderedPosts.push(
+      <PostWidget
+        key={_id}
+        postId={_id}
+        postUserId={userId}
+        name={`${firstName} ${lastName}`}
+        description={description}
+        location={location}
+        picturePath={picturePath}
+        userPicturePath={userPicturePath}
+        likes={likes}
+        comments={comments}
+        createdAt={createdAt}
+      />
+    );
+  }
+
+  return <>{renderedPosts}</>;
 };
 
 export default PostsWidget;

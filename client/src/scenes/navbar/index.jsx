@@ -59,7 +59,7 @@ const Navbar = () => {
             },
           }}
         >
-          SecureSocialMedia
+          The Citizen
         </Typography>
         {isNonMobileScreens && (
           <FlexBetween
@@ -110,7 +110,9 @@ const Navbar = () => {
               <MenuItem value={fullName}>
                 <Typography>{fullName}</Typography>
               </MenuItem>
-              <MenuItem onClick={() => setShowChangePassword(true)}>Change Password</MenuItem>
+              <MenuItem onClick={() => setShowChangePassword(true)}>
+                Change Password
+              </MenuItem>
               <MenuItem onClick={() => dispatch(setLogout())}>Log Out</MenuItem>
             </Select>
           </FormControl>
@@ -186,7 +188,9 @@ const Navbar = () => {
                 <MenuItem value={fullName}>
                   <Typography>{fullName}</Typography>
                 </MenuItem>
-                <MenuItem onClick={() => setShowChangePassword(true)}>Change Password</MenuItem>
+                <MenuItem onClick={() => setShowChangePassword(true)}>
+                  Change Password
+                </MenuItem>
                 <MenuItem onClick={() => dispatch(setLogout())}>
                   Log Out
                 </MenuItem>
@@ -196,7 +200,10 @@ const Navbar = () => {
         </Box>
       )}
       {showChangePassword && (
-          <ChangePassword open={showChangePassword} handleClose={() => setShowChangePassword(false)}/>
+        <ChangePassword
+          open={showChangePassword}
+          handleClose={() => setShowChangePassword(false)}
+        />
       )}
     </FlexBetween>
   );
