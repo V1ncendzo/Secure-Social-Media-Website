@@ -4,14 +4,15 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { passwordComplexityRegex } from "../scenes/loginPage/Form";
 
 const changePasswordSchema = yup.object().shape({
   oldPassword: yup.string().required("Old password is required"),
   newPassword: yup
     .string()
     .required("New password is required")
-    .min(1, "Password must be at least 1 characters"),
-  confirmPassword: yup
+    .matches(passwordComplexityRegex, "Password must be at least 8 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character"),
+    confirmPassword: yup
     .string()
     .oneOf([yup.ref("newPassword"), null], "Passwords must match")
     .required("Confirm password is required"),

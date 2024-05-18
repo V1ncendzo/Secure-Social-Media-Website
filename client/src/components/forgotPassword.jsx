@@ -5,6 +5,7 @@ import {
     Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
+import { passwordComplexityRegex } from "../scenes/loginPage/Form";
 
 const initialValuesReset = {
     newPassword: "",
@@ -20,7 +21,7 @@ const resetPasswordSchema = yup.object().shape({
     newPassword: yup
       .string()
       .required("New password is required")
-      .min(1, "Password must be at least 1 characters"),
+      .matches(passwordComplexityRegex, "Password must be at least 8 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character"),
     confirmPassword: yup
       .string()
       .oneOf([yup.ref("newPassword"), null], "Passwords must match")
