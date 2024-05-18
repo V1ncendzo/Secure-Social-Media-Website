@@ -4,15 +4,18 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { passwordComplexityRegex } from "../scenes/loginPage/Form.jsx";
+import { passwordComplexityRegex } from "../scenes/loginPage/Form.jsx"; // Ensure this is correctly imported
 
 const changePasswordSchema = yup.object().shape({
   oldPassword: yup.string().required("Old password is required"),
   newPassword: yup
     .string()
     .required("New password is required")
-    .matches(passwordComplexityRegex, "Password must be at least 8 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character"),
-    confirmPassword: yup
+    .matches(
+      passwordComplexityRegex, 
+      "Password must be at least 8 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character"
+    ),
+  confirmPassword: yup
     .string()
     .oneOf([yup.ref("newPassword"), null], "Passwords must match")
     .required("Confirm password is required"),
@@ -72,7 +75,7 @@ const ChangePassword = ({ open, handleClose }) => {
             handleChange, 
             handleBlur, 
             handleSubmit,
-            }) => (
+          }) => (
             <form onSubmit={handleSubmit}>
               <Box marginBottom={2}>
                 <TextField
@@ -112,17 +115,8 @@ const ChangePassword = ({ open, handleClose }) => {
                   value={values.confirmPassword}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  error={
-                    touched.confirmPassword &&
-                    (Boolean(errors.confirmPassword) ||
-                      (values.confirmPassword !== values.newPassword &&
-                        "Passwords don't match"))
-                  }
-                  helperText={
-                    touched.confirmPassword
-                      ? errors.confirmPassword || "Passwords matched"
-                      : null
-                  }
+                  error={touched.confirmPassword && Boolean(errors.confirmPassword)}
+                  helperText={touched.confirmPassword && errors.confirmPassword}
                 />
               </Box>
               <DialogActions>
@@ -131,7 +125,7 @@ const ChangePassword = ({ open, handleClose }) => {
                   type="submit"
                   variant="contained"
                   color="primary"
-                  disabled={isSubmitting || values.confirmPassword !== values.newPassword}
+                  disabled={isSubmitting}
                 >
                   Change Password
                 </Button>
