@@ -2,6 +2,14 @@ import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema(
   {
+    failedLoginAttempts: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    lockUntil: {
+      type: Number,
+    },
     firstName: {
       type: String,
       required: true,
@@ -41,8 +49,10 @@ const UserSchema = new mongoose.Schema(
     passwordResetToken: String,
     passwordResetExpires: Date,
   },
+    
   { timestamps: true }
 );
+  
 
 const User = mongoose.model("User", UserSchema);
 export default User;

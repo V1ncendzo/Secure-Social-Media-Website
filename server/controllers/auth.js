@@ -50,11 +50,31 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email: email }); //Find 1 in the Database
-    if (!user) return res.status(400).json({ msg: "Invalid credentials. " }); //Edit message
+    const user = await User.findOne({ email: email });
+
+    if (!user) return res.status(400).json({ msg: "Invalid credentials." });
+
+    // Check if the account is currently locked
+    const now = Date.now();
+    if (user.lockUntil && user.lockUntil > now) {
+      return res.status(400).json({ msg: "Account is temporarily locked. Please try again later." });
+    }
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ msg: "Invalid credentials. " });
+    if (!isMatch) {
+      user.failedLoginAttempts += 1;
+      if (user.failedLoginAttempts >= 5) {
+        user.lockUntil = now + 30 * 60 * 1000; // Lock account for 30 minutes
+        user.failedLoginAttempts = 0; // Reset attempts
+      }
+      await user.save();
+      return res.status(400).json({ msg: "Invalid credentials. " });
+    }
+
+    // Reset failedLoginAttempts and lockUntil if login is successful
+    user.failedLoginAttempts = 0;
+    user.lockUntil = undefined;
+    await user.save();
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
     delete user.password; // Delete password before sending the response

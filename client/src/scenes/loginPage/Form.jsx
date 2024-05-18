@@ -107,13 +107,18 @@ const Form = () => {
         body: JSON.stringify(values),
       });
 
-      if (!loggedInResponse.ok) {
-        // Set login error message if authentication fails
-        setLoginError("Email or password is incorrect. Please try again!");
-        return; // Exit the function early
-      }
-
       const loggedIn = await loggedInResponse.json();
+
+    if (!loggedInResponse.ok) {
+      // Check if the error message is related to exceeding the maximum number of login attempts
+      if (loggedIn.msg && loggedIn.msg.includes("Account is temporarily locked")) {
+        alert("You have exceeded the maximum number of login attempts. Please wait 30 minutes before trying again.");
+      } else {
+        // Set login error message if authentication fails for other reasons
+        setLoginError("Email or password is incorrect. Please try again!");
+      }
+      return; // Exit the function early
+    }
       onSubmitProps.resetForm();
 
       dispatch(
@@ -126,6 +131,8 @@ const Form = () => {
     } catch (err) {
       // Display alert message for login failure
       window.alert(err.message);
+      // Reset the form in case of error
+      onSubmitProps.resetForm();
     }
   };
 

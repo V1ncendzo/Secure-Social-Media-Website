@@ -4,7 +4,7 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { passwordComplexityRegex } from "../scenes/loginPage/Form";
+import { passwordComplexityRegex } from "../scenes/loginPage/Form.jsx";
 
 const changePasswordSchema = yup.object().shape({
   oldPassword: yup.string().required("Old password is required"),
