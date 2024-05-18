@@ -5,8 +5,8 @@ import {
     Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
-import { passwordComplexityRegex } from "../scenes/loginPage/Form.jsx";
 
+const passwordComplexityRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 const initialValuesReset = {
     newPassword: "",
     confirmPassword: "",
