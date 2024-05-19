@@ -6,6 +6,14 @@ export const createPost = async (req, res) => {
   try {
     const { userId, description, picturePath, isProfilePage } = req.body;
     const user = await User.findById(userId);
+
+    // Validate the uploaded image file extension
+    const allowedExtensions = ['.jpg', '.jpeg', '.png'];
+    const fileExtension = picturePath.substring(picturePath.lastIndexOf('.')).toLowerCase();
+    if (!allowedExtensions.includes(fileExtension)) {
+      return res.status(400).json({ message: 'Invalid image file format. Please upload a JPG, JPEG, or PNG file.' });
+    }
+
     const newPost = new Post({
       userId,
       firstName: user.firstName,
@@ -30,6 +38,7 @@ export const createPost = async (req, res) => {
     res.status(409).json({ message: err.message });
   }
 };
+
 
 /* READ */
 export const getFeedPosts = async (req, res) => {

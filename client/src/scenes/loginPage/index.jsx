@@ -25,7 +25,7 @@ const LoginPage = () => {
         backgroundColor={theme.palette.background.alt}
       >
         <Typography fontWeight="500" variant="h5" sx={{ mb: "1.5rem" }}>
-          Welcome to SecureSocialMedia, the best secured website!
+          Welcome to The Citizen!
         </Typography>
         <Form />
       </Box>

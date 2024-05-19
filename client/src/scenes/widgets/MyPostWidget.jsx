@@ -42,8 +42,16 @@ const MyPostWidget = ({ picturePath, isProfilePage }) => {
     formData.append("userId", _id);
     formData.append("description", post);
     if (image) {
-      formData.append("picture", image);
-      formData.append("picturePath", image.name);
+      const validExtensions = [".jpg", ".jpeg", ".png"];
+      const fileExtension = image.name.substring(image.name.lastIndexOf(".")).toLowerCase();
+      if (validExtensions.includes(fileExtension)) {
+        formData.append("picture", image);
+        formData.append("picturePath", image.name);
+      } else {
+        // Display error message to the user
+        alert("Invalid file format. Please upload a JPG, JPEG, or PNG file.");
+        return;
+      }
     }
     formData.append("isProfilePage", isProfilePage); 
     

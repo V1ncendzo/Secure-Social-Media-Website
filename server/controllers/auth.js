@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
-
+import { fileTypeFromBuffer } from "file-type";
 /* REGISTER USER */
 export const register = async (req, res) => {
   try {
@@ -15,7 +15,7 @@ export const register = async (req, res) => {
       location,
       occupation,
     } = req.body;
-
+ 
     // Check if the email already exists in the database
     const existingUser = await User.findOne({ email: email });
     if (existingUser) {
