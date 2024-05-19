@@ -18,7 +18,6 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPost } from "state";
 import CommentSection from "./CommentSection"; // Import the new component
-import DeleteComment from "components/DeleteComment"; // Adjust the path as needed
 
 const PostWidget = ({
   postId,

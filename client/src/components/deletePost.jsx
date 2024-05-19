@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { DeleteOutlined} from "@mui/icons-material";
-import { IconButton } from "@mui/material";
+import {  IconButton, CircularProgress, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const DeletePost = ({ postId }) => {
-  const [isLoading, setIsLoading] = useState(false); // Optional state for loading indicator
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const token = useSelector((state) => state.token);
   const navigate = useNavigate();
   const { _id } = useSelector((state) => state.user);
@@ -24,16 +25,16 @@ const DeletePost = ({ postId }) => {
         });
 
         if (response.ok) {
-          console.log("Post deleted successfully!");
+          setErrorMessage("");
           navigate(`/profile/${_id}`);
           setTimeout(() => {
-            navigate("/home"); // Navigate to the home page after a delay
-          }, 500); // 2000 milliseconds (2 seconds) delay 
+            navigate("/home"); 
+          }, 500); 
         } else {
-          throw new Error("Failed to delete post");
+          setErrorMessage("Failed to delete post.");
         }
       } catch (error) {
-        console.error("Error deleting post:", error);
+        setErrorMessage("Error deleting post: ", error);
       } finally {
         setIsLoading(false); // Reset loading state
       }
@@ -43,9 +44,13 @@ const DeletePost = ({ postId }) => {
   };
 
   return (
-    <IconButton disabled={isLoading} onClick={handleDelete} sx={{ color: "error.main"}}>
-      {isLoading ? "Deleting..." : <DeleteOutlined />}
-    </IconButton>
+    <div>
+      <IconButton disabled={isLoading} onClick={handleDelete} sx={{ color: "error.main"}}>
+        {isLoading ? <CircularProgress size={24} /> : <DeleteOutlined />}
+      </IconButton>
+      {errorMessage && <Typography color="error">{errorMessage}</Typography>}
+    </div>
+
   );
 };
 
