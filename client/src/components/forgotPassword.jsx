@@ -66,7 +66,7 @@ const ForgotPassword = ({ open, handleClose }) => {
             }
             
         } catch (error) {
-            setErrorMessage('An error occurred. Please try again.');
+            setErrorMessage('An error occurred. Please try again: ');
         }    
     };
 

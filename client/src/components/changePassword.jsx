@@ -1,5 +1,11 @@
 import React, { useState } from "react";
+<<<<<<< HEAD
 import { Box, Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Typography } from "@mui/material";
+=======
+import { Box, Button, TextField, 
+  Dialog, DialogTitle,Typography, 
+  DialogContent, DialogActions } from "@mui/material";
+>>>>>>> origin/main
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useSelector } from "react-redux";
@@ -42,7 +48,10 @@ const ChangePassword = ({ open, handleClose }) => {
 
       if (response.ok) {
         onSubmitProps.resetForm();
+<<<<<<< HEAD
         onSubmitProps.resetForm();
+=======
+>>>>>>> origin/main
         setErrorMessage("");
         setMessage("Your password has been changed.");
         setTimeout(() => {

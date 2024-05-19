@@ -25,7 +25,11 @@ const LoginPage = () => {
         backgroundColor={theme.palette.background.alt}
       >
         <Typography fontWeight="500" variant="h5" sx={{ mb: "1.5rem" }}>
+<<<<<<< HEAD
           Welcome to The Citizen!
+=======
+          Welcome to TheCitizenSocialMedia!
+>>>>>>> origin/main
         </Typography>
         <Form />
       </Box>

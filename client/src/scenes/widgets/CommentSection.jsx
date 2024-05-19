@@ -1,14 +1,26 @@
 import React, { useState } from "react";
-import { Box, Button, Divider, TextField, Typography } from "@mui/material"; // Import Avatar component
-import { Avatar } from "@mui/material"; // Import Avatar component
+import {
+  Box,
+  Button,
+  Divider,
+  TextField,
+  Typography,
+  Avatar,
+  IconButton,
+} from "@mui/material";
+import { DeleteOutlined } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { setPost } from "state";
+import { useNavigate } from "react-router-dom";
 
 const CommentSection = ({ postId, comments }) => {
   const [newComment, setNewComment] = useState("");
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
-  // const loggedInUserId = useSelector((state) => state.user._id);
+  const loggedInUserId = useSelector((state) => state.user._id);
+  const [isLoading, setIsLoading] = useState(false); 
+  const navigate = useNavigate();
+  const { _id } = useSelector((state) => state.user);
 
   const handleAddComment = async () => {
     const response = await fetch(`http://localhost:3001/posts/comment`, {
@@ -27,19 +39,66 @@ const CommentSection = ({ postId, comments }) => {
     }
   };
 
+  const handleDeleteComment = async (commentId) => {
+    const confirmation = window.confirm("Are you sure you want to delete this comment?");
+
+    if (confirmation) {
+      setIsLoading(true); // Set loading state (optional)
+      try {
+        const response = await fetch(
+          `http://localhost:3001/posts/${postId}/comments/${commentId}`,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`, // Include your auth token in headers
+            },
+          }
+        );
+    
+        if (response.ok) {
+          const updatedPost = await response.json();
+          dispatch(setPost({ post: updatedPost }));
+          navigate(`/profile/${_id}`);
+          setTimeout(() => {
+            navigate("/home"); 
+          }, 500); 
+        } else {  
+          console.error("Failed to delete comment");
+        }
+      } catch (error) {
+        console.error("Error deleting post:", error);
+      } finally {
+        setIsLoading(false); // Reset loading state
+      }
+    } else {
+      console.log("Comment deletion cancelled");
+    }
+  };
+
   return (
     <Box mt="0.5rem">
       {comments.map((comment, i) => (
         <Box key={`${comment.userId}-${i}`} mb="0.5rem">
           <Divider />
-          <Box display="flex" alignItems="center">
-            <Avatar
-              src={`http://localhost:3001/assets/${comment.userPicturePath}`}
-            />
-            <Typography sx={{ color: "textPrimary", ml: "0.5rem" }}>
-              <span style={{ fontWeight: "bold" }}>{comment.userName}</span> :{" "}
-              {comment.content}
-            </Typography>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Box display="flex" alignItems="center">
+              <Avatar
+                src={`http://localhost:3001/assets/${comment.userPicturePath}`}
+              />
+              <Typography sx={{ color: "textPrimary", ml: "0.5rem" }}>
+                <span style={{ fontWeight: "bold" }}>{comment.userName}</span> :{" "}
+                {comment.content}
+              </Typography>
+            </Box>
+            {comment.userId === loggedInUserId && (
+              <IconButton disabled={isLoading} sx={{ color: "error.main"}} onClick={() => handleDeleteComment(comment._id)}>
+                <DeleteOutlined />
+              </IconButton>
+            )}
           </Box>
           <Typography
             variant="caption"
