@@ -9,9 +9,11 @@ export const createPost = async (req, res) => {
 
     // Validate the uploaded image file extension
     const allowedExtensions = ['.jpg', '.jpeg', '.png'];
-    const fileExtension = picturePath.substring(picturePath.lastIndexOf('.')).toLowerCase();
-    if (!allowedExtensions.includes(fileExtension)) {
-      return res.status(400).json({ message: 'Invalid image file format. Please upload a JPG, JPEG, or PNG file.' });
+    if (picturePath) {
+      const fileExtension = picturePath.substring(picturePath.lastIndexOf('.')).toLowerCase();
+      if (!allowedExtensions.includes(fileExtension)) {
+        return res.status(400).json({ message: 'Invalid image file format. Please upload a JPG, JPEG, or PNG file.' });
+      }
     }
 
     const newPost = new Post({
