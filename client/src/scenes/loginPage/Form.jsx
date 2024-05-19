@@ -25,8 +25,8 @@ const registerSchema = yup.object().shape({
   .string()
   .required("New password is required")
   .matches(
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-    "Password must have at least 8 characters including uppercase letters, lowercase letters, numbers and 1 special character"
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,100}$/,
+    "Password must have at least 8 characters including uppercase letters, lowercase letters, numbers and 1 special character '!@#$%^&*'"
   ),
   location: yup.string().required("required"),
   occupation: yup.string().required("required"),
@@ -264,7 +264,7 @@ return (
               error={Boolean(touched.email) && Boolean(errors.email)}
               helperText={touched.email && errors.email}
               sx={{ gridColumn: "span 4" }}
-            />``
+            />
             <TextField
               label="Password"
               type="password"

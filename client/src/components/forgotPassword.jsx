@@ -6,7 +6,7 @@ import {
 import { Formik } from "formik";
 import * as yup from "yup";
 
-const passwordComplexityRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+const passwordComplexityRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,100}$/;
 const initialValuesReset = {
     newPassword: "",
     confirmPassword: "",
@@ -21,7 +21,7 @@ const resetPasswordSchema = yup.object().shape({
     newPassword: yup
       .string()
       .required("New password is required")
-      .matches(passwordComplexityRegex, "Password must be at least 8 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character"),
+      .matches(passwordComplexityRegex, "Password must be at least 8 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character '!@#$%^&*'"),
     confirmPassword: yup
       .string()
       .oneOf([yup.ref("newPassword"), null], "Passwords must match")

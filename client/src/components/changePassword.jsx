@@ -5,13 +5,13 @@ import * as yup from "yup";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-const passwordComplexityRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+const passwordComplexityRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,100}$/;
 const changePasswordSchema = yup.object().shape({
   oldPassword: yup.string().required("Old password is required"),
   newPassword: yup
     .string()
     .required("New password is required")
-    .matches(passwordComplexityRegex, "Password must be at least 8 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character"),
+    .matches(passwordComplexityRegex, "Password must be at least 8 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character '!@#$%^&*'"),
     confirmPassword: yup
     .string()
     .oneOf([yup.ref("newPassword"), null], "Passwords must match")
