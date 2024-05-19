@@ -54,7 +54,7 @@ export const resetPassword = async (req, res) => {
     const { verifyToken, newPassword } = req.body;
 
     // Validate the password complexity
-    const passwordComplexityRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const passwordComplexityRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,100}$/;
     if (!passwordComplexityRegex.test(newPassword)) {
       return res.status(400).json({
         error: "Password must be at least 8 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character",
