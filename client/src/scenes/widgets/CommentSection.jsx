@@ -11,7 +11,6 @@ import {
 import { DeleteOutlined } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { setPost } from "state";
-import { useNavigate } from "react-router-dom";
 
 const CommentSection = ({ postId, comments }) => {
   const [newComment, setNewComment] = useState("");
@@ -19,8 +18,6 @@ const CommentSection = ({ postId, comments }) => {
   const token = useSelector((state) => state.token);
   const loggedInUserId = useSelector((state) => state.user._id);
   const [isLoading, setIsLoading] = useState(false); 
-  const navigate = useNavigate();
-  const { _id } = useSelector((state) => state.user);
 
   const handleAddComment = async () => {
     const response = await fetch(`http://localhost:3001/posts/comment`, {
@@ -58,10 +55,6 @@ const CommentSection = ({ postId, comments }) => {
         if (response.ok) {
           const updatedPost = await response.json();
           dispatch(setPost({ post: updatedPost }));
-          navigate(`/profile/${_id}`);
-          setTimeout(() => {
-            navigate("/home"); 
-          }, 500); 
         } else {  
           console.error("Failed to delete comment");
         }
