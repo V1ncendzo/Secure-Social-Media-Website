@@ -21,7 +21,13 @@ const registerSchema = yup.object().shape({
   firstName: yup.string().required("required"),
   lastName: yup.string().required("required"),
   email: yup.string().email("invalid email").required("required"),
-  password: yup.string().required("required"),
+  password: yup
+  .string()
+  .required("New password is required")
+  .matches(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,100}$/,
+    "Password must have at least 8 characters including uppercase letters, lowercase letters, numbers and 1 special character '!@#$%^&*'"
+  ),
   location: yup.string().required("required"),
   occupation: yup.string().required("required"),
   picture: yup.string().required("required"),
@@ -63,6 +69,12 @@ const Form = () => {
 
   const register = async (values, onSubmitProps) => {
     try {
+      // Check if the file type is valid
+      const allowedFileTypes = ["image/jpeg", "image/jpg", "image/png"];
+      if (!allowedFileTypes.includes(values.picture.type)) {
+        throw new Error("Invalid file type. Please choose a JPG, JPEG, or PNG file.");
+      }
+
       // this allows us to send form info with image
       const formData = new FormData();
       for (let value in values) {
@@ -88,7 +100,7 @@ const Form = () => {
         setLoginError("");
         setRegisterMessage("Registration successful!");
         setTimeout(() => {
-          setRegisterMessage("")}, 5000);
+        setRegisterMessage("")}, 5000);
         // throw new Error(savedUser.error || "Registration failed");
       } else {
         // If there's an error in the response, it means registration failed
@@ -97,7 +109,7 @@ const Form = () => {
           setRegisterError("")}, 5000);
       }
     } catch (err) {
-      setRegisterError("Registration failed!");
+      setRegisterError("Registration error: ", err);
       setTimeout(() => {
         setRegisterError("")}, 5000);
       // Reset the form in case of error
@@ -113,17 +125,22 @@ const Form = () => {
         body: JSON.stringify(values),
       });
 
-      if (!loggedInResponse.ok) {
-        // Set login error message if authentication fails
-        setRegisterError("");
-        setRegisterMessage("");
+      const loggedIn = await loggedInResponse.json();
+
+    if (!loggedInResponse.ok) {
+      setRegisterError("");
+      setRegisterMessage("");
+      // Check if the error message is related to exceeding the maximum number of login attempts
+      if (loggedIn.msg && loggedIn.msg.includes("Account is temporarily locked")) {
+        setLoginError("You have exceeded the maximum number of login attempts. Please wait 30 minutes before trying again.");
+      } else {
+        // Set login error message if authentication fails for other reasons
         setLoginError("Email or password is incorrect. Please try again!");
         setTimeout(() => {
           setLoginError("")}, 5000);
-        return; // Exit the function early
       }
-
-      const loggedIn = await loggedInResponse.json();
+      return; // Exit the function early
+    }
       onSubmitProps.resetForm();
 
       dispatch(
@@ -137,9 +154,10 @@ const Form = () => {
       // window.alert(err.message);
       setRegisterError("");
       setRegisterMessage("");
-      setLoginError("Unknown error");
+      setLoginError("Login error: ", err);
       setTimeout(() => {
         setLoginError("")}, 5000);
+      onSubmitProps.resetForm();
     }
   };
 
@@ -183,7 +201,6 @@ return (
               {registerMessage}
             </Typography>
           )}
-
           <Box
             display="grid"
             gap="30px"

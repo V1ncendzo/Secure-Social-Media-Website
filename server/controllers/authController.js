@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
 
 export const forgotPassword = async (req, res) => {
   try {
-    const { email} = req.body;
+    const { email } = req.body;
     const user = await User.findOne({ email: email });
 
     if (!user) {
@@ -27,11 +27,10 @@ export const forgotPassword = async (req, res) => {
       expiresIn: "1h",
     });
 
-    User.passwordResetToken = token;
-    User.passwordResetExpires = Date.now() + 3600000; // 1 hour
+    user.passwordResetToken = token;
+    user.passwordResetExpires = Date.now() + 3600000; // 1 hour
     await user.save();
 
-    // const resetUrl = "http://localhost:3001/auth/reset-password?token=${token}`;
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: user.email,
@@ -52,21 +51,30 @@ export const forgotPassword = async (req, res) => {
 
 export const resetPassword = async (req, res) => {
   try {
-    const token = req.body.verifyToken;
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const { verifyToken, newPassword } = req.body;
+
+    // Validate the password complexity
+    const passwordComplexityRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,100}$/;
+    if (!passwordComplexityRegex.test(newPassword)) {
+      return res.status(400).json({
+        error: "Password must be at least 8 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character",
+      });
+    }
+
+    const decodedToken = jwt.verify(verifyToken, process.env.JWT_SECRET);
 
     const user = await User.findOne({
       _id: decodedToken.id,
+      passwordResetToken: verifyToken,
+      passwordResetExpires: { $gt: Date.now() },
     });
 
     if (!user) {
-      return res
-        .status(401)
-        .json({ error: "Invalid or expired password reset token" });
+      return res.status(401).json({ error: "Invalid or expired password reset token" });
     }
 
     const salt = await bcrypt.genSalt();
-    user.password = await bcrypt.hash(req.body.newPassword, salt);
+    user.password = await bcrypt.hash(newPassword, salt);
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
     await user.save();
@@ -83,9 +91,7 @@ export const resetPassword = async (req, res) => {
     await transporter.sendMail(mailOptions);
     res.json({ message: "Password reset successful" });
   } catch (err) {
-    console.error("Failed to send password reset confirmation email:", err);
-    res
-      .status(500)
-      .json({ error: "Failed to send password reset confirmation email" });
+    console.error("Failed to reset password:", err);
+    res.status(500).json({ error: "Failed to reset password" });
   }
 };

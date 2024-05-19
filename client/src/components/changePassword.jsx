@@ -1,19 +1,24 @@
 import React, { useState } from "react";
+<<<<<<< HEAD
+import { Box, Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Typography } from "@mui/material";
+=======
 import { Box, Button, TextField, 
   Dialog, DialogTitle,Typography, 
   DialogContent, DialogActions } from "@mui/material";
+>>>>>>> origin/main
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
+const passwordComplexityRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,100}$/;
 const changePasswordSchema = yup.object().shape({
   oldPassword: yup.string().required("Old password is required"),
   newPassword: yup
     .string()
     .required("New password is required")
-    .min(1, "Password must be at least 1 characters"),
-  confirmPassword: yup
+    .matches(passwordComplexityRegex, "Password must be at least 8 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character '!@#$%^&*'"),
+    confirmPassword: yup
     .string()
     .oneOf([yup.ref("newPassword"), null], "Passwords must match")
     .required("Confirm password is required"),
@@ -43,6 +48,10 @@ const ChangePassword = ({ open, handleClose }) => {
 
       if (response.ok) {
         onSubmitProps.resetForm();
+<<<<<<< HEAD
+        onSubmitProps.resetForm();
+=======
+>>>>>>> origin/main
         setErrorMessage("");
         setMessage("Your password has been changed.");
         setTimeout(() => {

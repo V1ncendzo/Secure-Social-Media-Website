@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { DeleteOutlined} from "@mui/icons-material";
-import {  IconButton, CircularProgress, Typography } from "@mui/material";
+import { IconButton, CircularProgress, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const DeletePost = ({ postId }) => {
@@ -25,15 +25,18 @@ const DeletePost = ({ postId }) => {
         });
 
         if (response.ok) {
+          console.log("Post deleted successfully!");
           setErrorMessage("");
           navigate(`/profile/${_id}`);
           setTimeout(() => {
             navigate("/home"); 
           }, 500); 
         } else {
+          // throw new Error("Failed to delete post");
           setErrorMessage("Failed to delete post.");
         }
       } catch (error) {
+        console.error("Error deleting post:", error);
         setErrorMessage("Error deleting post: ", error);
       } finally {
         setIsLoading(false); // Reset loading state
@@ -50,7 +53,6 @@ const DeletePost = ({ postId }) => {
       </IconButton>
       {errorMessage && <Typography color="error">{errorMessage}</Typography>}
     </div>
-
   );
 };
 
