@@ -17,8 +17,9 @@ export const createPost = async (req, res) => {
       likes: {},
       comments: [],
     });
+    
     await newPost.save();
-
+    
     if (isProfilePage) {
       const posts = await Post.find().sort({ createdAt: -1 });
       res.status(201).json(posts);
