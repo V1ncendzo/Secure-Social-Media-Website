@@ -1,6 +1,7 @@
 import express from "express";
 import {
   addCommentToPost,
+  deleteCommentFromPost,
   deletePost,
   getFeedPosts,
   getUserPosts,
@@ -22,4 +23,11 @@ router.delete("/:id/delete", verifyToken, deletePost);
 
 /* ADD COMMENT */
 router.post("/comment", verifyToken, addCommentToPost); // Add the new route for adding comments
+
+/* DELETE COMMENT */
+router.delete(
+  "/:postId/comments/:commentId",
+  verifyToken,
+  deleteCommentFromPost
+);
 export default router;
