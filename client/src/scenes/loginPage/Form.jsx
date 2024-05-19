@@ -67,6 +67,12 @@ const Form = () => {
 
   const register = async (values, onSubmitProps) => {
     try {
+      // Check if the file type is valid
+      const allowedFileTypes = ["image/jpeg", "image/jpg", "image/png"];
+      if (!allowedFileTypes.includes(values.picture.type)) {
+        throw new Error("Invalid file type. Please choose a JPG, JPEG, or PNG file.");
+      }
+
       // this allows us to send form info with image
       const formData = new FormData();
       for (let value in values) {

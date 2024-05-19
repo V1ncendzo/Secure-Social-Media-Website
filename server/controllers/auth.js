@@ -15,14 +15,7 @@ export const register = async (req, res) => {
       location,
       occupation,
     } = req.body;
-    // Check if image is in valid form
-    if (req.file) {
-      const validateFileType = await fileTypeFromBuffer(req.file.buffer);
-      if (!['image/jpeg', 'image/png', 'image/jpg' ].includes(validateFileType?.mime)) {
-        return res.status(400).json({ message: 'Unsupported file type. Only .jpg, .jpeg, and .png files are allowed.' });
-      }
-    }
-    
+ 
     // Check if the email already exists in the database
     const existingUser = await User.findOne({ email: email });
     if (existingUser) {
