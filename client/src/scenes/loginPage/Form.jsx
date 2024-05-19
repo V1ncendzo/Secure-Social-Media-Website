@@ -56,6 +56,8 @@ const initialValuesLogin = {
 const Form = () => {
   const [pageType, setPageType] = useState("login");
   const [loginError, setLoginError] = useState(""); //red line alert
+  const [registerError, setRegisterError] = useState("");
+  const [registerMessage, setRegisterMessage] = useState("");
   const { palette } = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -88,20 +90,28 @@ const Form = () => {
         }
       );
 
-      const savedUser = await savedUserResponse.json();
+      // const savedUser = await savedUserResponse.json();
 
       if (savedUserResponse.ok) {
         // If the response status is ok, it means registration was successful
         onSubmitProps.resetForm();
         setPageType("login");
-        alert("Registration successful!"); // Alert when registration is successful
+        setRegisterError("");
+        setLoginError("");
+        setRegisterMessage("Registration successful!");
+        setTimeout(() => {
+        setRegisterMessage("")}, 5000);
+        // throw new Error(savedUser.error || "Registration failed");
       } else {
         // If there's an error in the response, it means registration failed
-        throw new Error(savedUser.error || "Registration failed");
+        setRegisterError("Registration failed!");
+        setTimeout(() => {
+          setRegisterError("")}, 5000);
       }
     } catch (err) {
-      // Display alert with the error message
-      alert(err.message);
+      setRegisterError("Registration error: ", err);
+      setTimeout(() => {
+        setRegisterError("")}, 5000);
       // Reset the form in case of error
       onSubmitProps.resetForm();
     }
@@ -118,12 +128,16 @@ const Form = () => {
       const loggedIn = await loggedInResponse.json();
 
     if (!loggedInResponse.ok) {
+      setRegisterError("");
+      setRegisterMessage("");
       // Check if the error message is related to exceeding the maximum number of login attempts
       if (loggedIn.msg && loggedIn.msg.includes("Account is temporarily locked")) {
-        alert("You have exceeded the maximum number of login attempts. Please wait 30 minutes before trying again.");
+        setLoginError("You have exceeded the maximum number of login attempts. Please wait 30 minutes before trying again.");
       } else {
         // Set login error message if authentication fails for other reasons
         setLoginError("Email or password is incorrect. Please try again!");
+        setTimeout(() => {
+          setLoginError("")}, 5000);
       }
       return; // Exit the function early
     }
@@ -137,9 +151,12 @@ const Form = () => {
       );
       navigate("/home");
     } catch (err) {
-      // Display alert message for login failure
-      window.alert(err.message);
-      // Reset the form in case of error
+      // window.alert(err.message);
+      setRegisterError("");
+      setRegisterMessage("");
+      setLoginError("Login error: ", err);
+      setTimeout(() => {
+        setLoginError("")}, 5000);
       onSubmitProps.resetForm();
     }
   };
@@ -174,7 +191,16 @@ return (
               {loginError}
             </Typography>
           )}
-
+          {registerError && (
+            <Typography sx={{ color: "red", marginBottom: "2rem" }}>
+              {registerError}
+            </Typography>
+          )}
+          {registerMessage && (
+            <Typography sx={{ color: "green", marginBottom: "2rem" }}>
+              {registerMessage}
+            </Typography>
+          )}
           <Box
             display="grid"
             gap="30px"

@@ -1,5 +1,5 @@
-import React from "react";
-import { Box, Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
+import React, { useState } from "react";
+import { Box, Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Typography } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useSelector } from "react-redux";
@@ -20,6 +20,8 @@ const changePasswordSchema = yup.object().shape({
 
 const ChangePassword = ({ open, handleClose }) => {
   const token = useSelector((state) => state.token);
+  const [Message, setMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
   
   const handleChangePassword = async (values, onSubmitProps) => {
@@ -40,14 +42,21 @@ const ChangePassword = ({ open, handleClose }) => {
 
       if (response.ok) {
         onSubmitProps.resetForm();
-        // alert("Password changed successfully!");
-        navigate("/");
+        onSubmitProps.resetForm();
+        setErrorMessage("");
+        setMessage("Your password has been changed.");
+        setTimeout(() => {
+          navigate("/")}, 3000);
       } else {
-        const data = await response.json();
-        throw new Error(data.message || "Failed to change password");
+        // const data = await response.json();
+        // throw new Error(data.message || "Failed to change password");
+        setMessage("");
+        setErrorMessage("Some error occured.");
       }
     } catch (err) {
-      window.alert(err.message);
+      // window.alert(err.message);
+      setMessage("");
+      setErrorMessage("Change password has been canceled: ", err);
     }
   };
 
@@ -125,6 +134,8 @@ const ChangePassword = ({ open, handleClose }) => {
                   }
                 />
               </Box>
+              {Message && (<Typography sx={{ color: "green", marginBottom: "1rem" }}> {Message} </Typography>)}
+              {errorMessage && (<Typography sx={{ color: "red", marginBottom: "1rem" }}> {errorMessage} </Typography>)}
               <DialogActions>
                 <Button onClick={handleClose} color="secondary">Close</Button>
                 <Button
