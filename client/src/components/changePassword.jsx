@@ -56,7 +56,7 @@ const ChangePassword = ({ open, handleClose }) => {
     } catch (err) {
       // window.alert(err.message);
       setMessage("");
-      setErrorMessage("Unknown error.");
+      setErrorMessage("Change password has been canceled: ", err);
     }
   };
 

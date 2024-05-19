@@ -34,7 +34,7 @@ const DeletePost = ({ postId }) => {
           setErrorMessage("Failed to delete post.");
         }
       } catch (error) {
-        setErrorMessage("Failed to delete post.");
+        setErrorMessage("Error deleting post: ", error);
       } finally {
         setIsLoading(false); // Reset loading state
       }
