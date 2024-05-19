@@ -92,7 +92,14 @@ const MyPostWidget = ({ picturePath, isProfilePage }) => {
           <Dropzone
             acceptedFiles=".jpg,.jpeg,.png"
             multiple={false}
-            onDrop={(acceptedFiles) => setImage(acceptedFiles[0])}
+            onDrop={(acceptedFiles) => {
+              // Check if a file was dropped
+              if (acceptedFiles.length > 0) {
+                setImage(acceptedFiles[0]);
+              } else {
+                setImage(null); // Set image to null if no file dropped
+              }
+            }}
           >
             {({ getRootProps, getInputProps }) => (
               <FlexBetween>
@@ -104,9 +111,8 @@ const MyPostWidget = ({ picturePath, isProfilePage }) => {
                   sx={{ "&:hover": { cursor: "pointer" } }}
                 >
                   <input {...getInputProps()} />
-                  {!image ? (
-                    <p>Add Image Here</p>
-                  ) : (
+                  {!image && <p>Add Image Here</p>}
+                  {image && (
                     <FlexBetween>
                       <Typography>{image.name}</Typography>
                       <EditOutlined />
