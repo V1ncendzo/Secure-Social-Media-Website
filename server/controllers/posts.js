@@ -146,3 +146,50 @@ export const addCommentToPost = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+/* DELETE COMMENT */
+export const deleteCommentFromPost = async (req, res) => {
+  try {
+    const { postId, commentId } = req.params;
+    const userIdFromRequest = req.user.id; // Assuming you have the user ID available in the request object
+
+    // Find the post by its ID
+    const post = await Post.findById(postId);
+
+    // Check if the post exists
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    // Find the comment by its ID
+    const comment = post.comments.find(
+      (comment) => comment._id.toString() === commentId
+    );
+
+    // Check if the comment exists
+    if (!comment) {
+      return res.status(404).json({ message: "Comment not found" });
+    }
+
+    // Check if the user is authorized to delete the comment (by matching user ID)
+    if (comment.userId.toString() !== userIdFromRequest) {
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to delete this comment" });
+    }
+
+    // If authorized, delete the comment by filtering it out of the comments array
+    post.comments = post.comments.filter(
+      (comment) => comment._id.toString() !== commentId
+    );
+    await post.save();
+
+    // Return a success message
+    res
+      .status(200)
+      .json({ success: true, message: "Comment deleted successfully" });
+  } catch (err) {
+    // If there's an error during the deletion process, return a 500 status with an error message
+    res.status(500).json({ message: err.message });
+  }
+};
