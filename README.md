@@ -8,10 +8,10 @@ Nguyen Duc Thang - 20210778
 # Setup project
 Setup server:
 1. cd to server
-2. npm i
+2. npm i (if there is no node_modules in server directory)
 3. nodemon index.js
 
 Setup client:
 1. cd to client
-2. npm i
+2. npm i 
 3. npm run start
